@@ -17,13 +17,14 @@ curs = conn.cursor()
 # Enumerate
 # CREATE TYPE GENDER AS ENUM ('male', 'female');
 
-a = curs.execute("""
+
+curs.execute("""
 DROP TABLE IF EXISTS PASSENGERS;
 
 CREATE TYPE GENDER AS ENUM ('male', 'female');
 
 CREATE TABLE "passengers" (
-    Survived INT NOT NULL,
+    Survived VARCHAR(75) NOT NULL,
     Pclass INT NOT NULL,
     Name  VARCHAR(75) NOT NULL,
     Sex GENDER NOT NULL,
@@ -36,48 +37,56 @@ CREATE TABLE "passengers" (
 
 
 df = pd.read_csv('titanic.csv')
+
 for row in df:
-    curs.execute(
-                """
-                    INSERT INTO 
-                        passengers (
-                            survived, 
-                            name, 
-                            pclass, 
-                            sex, 
-                            age, 
-                            siblings_spouse_count, 
-                            parents_children_count, 
-                            fare
-                        ) 
-                    VALUES 
-                        (
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s,
-                            %s   
-                        );
-                """,
-                (
-                    row['Survived'], 
-                    row['Name'], 
-                    row['Pclass'], 
-                    row['Sex'], 
-                    row['Age'], 
-                    row['Siblings/Spouses Aboard'],
-                    row['Parents/Children Aboard'],
-                    row['Fare']
-                )
-    )
-    print(df)
+    print(row['Survived'], row['Pclass'], row['Name'], row['Sex'], row['Siblings/Spouses Aboard '], row['Parents/Children Aboard'], row['Fare'])
+    # curs.execute(
+    #             """
+    #                 INSERT INTO 
+    #                     passengers (
+    #                         survived, 
+    #                         name, 
+    #                         pclass, 
+    #                         sex, 
+    #                         age, 
+    #                         siblings_spouse_count, 
+    #                         parents_children_count, 
+    #                         fare
+    #                     ) 
+    #                 VALUES 
+    #                     (
+    #                         %s,
+    #                         %s,
+    #                         %s,
+    #                         %s,
+    #                         %s,
+    #                         %s,
+    #                         %s,
+    #                         %s   
+    #                     );
+    #             """,
+    #             (
+    #                 row['Survived'], 
+    #                 row['Name'], 
+    #                 row['Pclass'], 
+    #                 row['Sex'], 
+    #                 row['Age'], 
+    #                 row['Siblings/Spouses Aboard'],
+    #                 row['Parents/Children Aboard'],
+    #                 row['Fare']
+    #             )
+    # )
+    # print(df)
     
     
 # df_to_sql = df.to_sql('review_titanic', conn)
 # cursor = conn.cursor()
+
+
+
+
+
+
 # ### Count how many rows you have? Hint: 249
 # query = """
 #         SELECT COUNT(*) 
@@ -103,3 +112,8 @@ for row in df:
 # conn.commit()
 # curs.close()
 # conn.close()
+
+
+
+# Each row inserted into database.
+# INSERT INTO __________ VAlUES _____

@@ -1,8 +1,9 @@
-""" Without the use of Pandas"""
+""" Without the use of Pandas. Works"""
 
 
 import psycopg2
 from csv import DictReader
+import csv
 
 # DictReader : 
 # Looks similar to sqlite3, but needs auth/host info to connect
@@ -19,14 +20,14 @@ pg_conn = psycopg2.connect(dbname=dbname, user=user,
 pg_curs = pg_conn.cursor()
 
 pg_curs.execute("""
-CREATE TYPE sex AS ENUM ('male', 'female');
+CREATE TYPE SEX_SEX AS ENUM ('male', 'female');
 
-CREATE TABLE passengers (
+CREATE TABLE abc (
   id SERIAL PRIMARY KEY,
   survived BOOLEAN NOT NULL, 
   pclass INTEGER NOT NULL,
   name varchar(255) NOT NULL,
-  sex sex NOT NULL,
+  sex SEX_SEX NOT NULL,
   age DECIMAL NOT NULL, 
   siblings_spouse_count INTEGER NOT NULL,
   parents_children_count INTEGER NOT NULL,
@@ -37,13 +38,17 @@ CREATE TABLE passengers (
 
 # iterate over each line as a ordered dictionary and print only few column by column name
 # https://thispointer.com/python-read-a-csv-file-line-by-line-with-or-without-header/ (Documentation)
-with open('titanic.csv', 'r') as read_obj:
-    csv_dict_reader = DictReader(read_obj)
-    for row in csv_dict_reader:
-        pg_curs.execute(
+# with open('titanic.csv', 'r') as read_obj:
+#     csv_dict_reader = DictReader(read_obj)
+#     for row in csv_dict_reader:
+#         pg_curs.execute(
+with open('titanic.csv', newline='') as csvfile:
+     reader = csv.DictReader(csvfile)
+     for row in reader:
+          pg_curs.execute(
             """
                 INSERT INTO 
-                    passengers (
+                    abc (
                         survived, 
                         name, 
                         pclass, 
@@ -80,6 +85,8 @@ with open('titanic.csv', 'r') as read_obj:
 
 
 pg_conn.commit()  # "Save" by committing
-pg_curs.fetchall() 
 pg_curs.close()
-# pg_conn.close()  # If we were really done
+pg_conn.close()  # If we were really done
+
+
+
